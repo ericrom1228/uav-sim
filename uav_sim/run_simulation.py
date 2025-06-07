@@ -6,7 +6,7 @@ from uav_sim.controller.sensor import add_sensor_noise
 
 def run():
     setpoint = 10.0
-    dt = 0.1
+    dt = 0.01
     sim_time = 10
 
     pid = PIDController(kp=1.0, ki=0.1, kd=0.05)
@@ -16,7 +16,7 @@ def run():
         writer = csv.writer(f)
         writer.writerow(["time", "position", "velocity", "error", "command"])
 
-        for step in range(int(sim_time / dt)):
+        for step in range(1, int(sim_time / dt)+1):
             time = step * dt
             noisy_position = add_sensor_noise(sim.position)
             error = setpoint - noisy_position

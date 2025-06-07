@@ -19,3 +19,13 @@ uav_sim_project/
 |   +-- analyze_flight.ipynb  # Plot and analyze log data
 |-- requirements.txt
 ```
+
+# Run the simulation
+```
+python -m uav_sim.run_simulation
+```
+
+# Plot the results
+```
+python plot.py
+```
