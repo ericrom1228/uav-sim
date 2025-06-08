@@ -1,10 +1,13 @@
 class UAVSimulator:
-    def __init__(self, initial_position=0.0, initial_velocity=0.0):
-        self.position = initial_position
-        self.velocity = initial_velocity
-        self.history = []
+    def __init__(self):
+        self.position = [0.0, 0.0, 0.0]  # x, y, z
+        self.velocity = [0.0, 0.0, 0.0]  # vx, vy, vz
+        self.max_velocity = 10.0  # set physical limitations
 
-    def step(self, acceleration, dt):
-        self.velocity += acceleration * dt
-        self.position += self.velocity * dt
-        self.history.append((self.position, self.velocity))
+    def update(self, velocity_vector: list[float], dt: float) -> None:
+        for i in range(3):
+            self.velocity[i] = min(velocity_vector[i], self.max_velocity)
+            self.position[i] += self.velocity[i] * dt
+
+    def get_position(self) -> list[float]:
+        return self.position

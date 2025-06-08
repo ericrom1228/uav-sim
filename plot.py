@@ -36,9 +36,12 @@ ani = animation.FuncAnimation(
     repeat=False
 )
 
-plt.title("Drone Position Over Time")
-plt.xlabel("Position (meters)")
-plt.yticks([])
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+# plt.title("Drone Position Over Time")
+# plt.xlabel("Position (meters)")
+# plt.yticks([])
+# plt.grid(True)
+# plt.tight_layout()
+# plt.show()
+
+ani.save(filename="uav_sim.gif", writer="pillow")
+

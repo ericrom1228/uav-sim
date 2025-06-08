@@ -22,10 +22,13 @@ uav_sim_project/
 
 # Run the simulation
 ```
-python -m uav_sim.run_simulation
+python -m uav_sim.run_3d_simulation
 ```
 
-# Plot the results
-```
-python plot.py
-```
+[//]: # (# Plot the results)
+
+[//]: # (```)
+
+[//]: # (python plot.py)
+
+[//]: # (```)
