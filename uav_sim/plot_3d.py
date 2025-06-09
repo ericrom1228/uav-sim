@@ -97,8 +97,20 @@ dt_seconds = SIM_CONFIG["dt"]
 interval_ms = int(dt_seconds * 1000)
 
 ani = animation.FuncAnimation(
-    fig, update, frames=len(times), init_func=init,
-    blit=False, interval=interval_ms, repeat=False
+    fig, update,
+    frames=len(times),
+    init_func=init,
+    blit=False,
+    interval=interval_ms,
+    repeat=False
 )
 
-plt.show()
+# plt.show()
+
+# # Save as GIF
+# ani.save("uav_simulation.gif", writer="pillow", fps=int(1 / dt_seconds))
+# print("Saved animation to uav_simulation.gif")
+
+# Save as MP4 using ffmpeg
+ani.save("uav_simulation.mp4", writer="ffmpeg", fps=int(1 / dt_seconds))
+print("Saved animation to uav_simulation.mp4")

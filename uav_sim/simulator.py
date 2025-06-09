@@ -52,7 +52,7 @@ class UAVSimulator:
                 self.velocity = (self.velocity / speed) * self.max_velocity
 
             # self.position += add_sensor_noise(self.velocity * self.dt)
-            self.position += add_sensor_noise(self.velocity * self.dt)
+            self.position += self.velocity * self.dt
             self.trajectory.append((t, *self.position))
             t += self.dt
 
