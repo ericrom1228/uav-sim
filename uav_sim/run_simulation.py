@@ -3,8 +3,12 @@
 from config import SIM_CONFIG
 from simulator import UAVSimulator
 
-if __name__ == "__main__":
+
+def main():
     sim = UAVSimulator(SIM_CONFIG)
-    df = sim.run()
-    df.to_csv("simulation_output.csv", index=False)
-    print("Simulation complete. Output saved to simulation_output.csv")
+    sim.run()
+    sim.save_to_csv()
+
+
+if __name__ == "__main__":
+    main()

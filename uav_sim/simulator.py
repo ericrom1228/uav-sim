@@ -1,7 +1,6 @@
-# simulator.py
+# uav_simulator.py
 
 import numpy as np
-import pandas as pd
 from pid_controller import PIDController
 from sensor import add_sensor_noise
 
@@ -9,48 +8,59 @@ from sensor import add_sensor_noise
 class UAVSimulator:
     def __init__(self, config):
         self.dt = config["dt"]
-        self.sim_time = config["sim_time"]
-        self.start_position = np.array(config["start_position"], dtype=float)
-        self.target_position = np.array(config["target_position"], dtype=float)
+        self.max_time = config["sim_time"]
         self.max_velocity = config["max_velocity"]
-
-        self.position = self.start_position.copy()
+        self.tolerance = config["tolerance"]
+        self.position = np.array(config["initial_position"], dtype=float)
         self.velocity = np.zeros(3)
+        self.waypoints = [np.array(wp, dtype=float) for wp in config["waypoints"]]
+        self.current_wp_idx = 0
 
-        self.pid_x = PIDController(**config["pid"]["x"])
-        self.pid_y = PIDController(**config["pid"]["y"])
-        self.pid_z = PIDController(**config["pid"]["z"])
+        self.pid_controllers = {
+            "x": PIDController(**config["pid"]["x"], dt=self.dt),
+            "y": PIDController(**config["pid"]["y"], dt=self.dt),
+            "z": PIDController(**config["pid"]["z"], dt=self.dt),
+        }
 
-        self.history = []
-
-    def clip_velocity(self, velocity):
-        speed = np.linalg.norm(velocity)
-        if speed > self.max_velocity:
-            return velocity * (self.max_velocity / speed)
-        return velocity
+        self.trajectory = []
 
     def run(self):
-        steps = int(self.sim_time / self.dt)
-        for step in range(steps):
-            error = self.target_position - self.position
+        t = 0.0
+        while t < self.max_time and self.current_wp_idx < len(self.waypoints):
+            target = self.waypoints[self.current_wp_idx]
+            error = target - self.position
 
-            vx = self.pid_x.compute(error[0], self.dt)
-            vy = self.pid_y.compute(error[1], self.dt)
-            vz = self.pid_z.compute(error[2], self.dt)
+            if np.linalg.norm(error) < self.tolerance:
+                self.current_wp_idx += 1
+                if self.current_wp_idx >= len(self.waypoints):
+                    print("All waypoints reached.")
+                    break
+                # Reset PID controllers for next waypoint
+                for pid in self.pid_controllers.values():
+                    pid.reset()
+                continue
 
-            self.velocity = np.array([vx, vy, vz])
-            self.velocity = self.clip_velocity(self.velocity)
+            accel = np.array([
+                self.pid_controllers["x"].update(target[0], self.position[0]),
+                self.pid_controllers["y"].update(target[1], self.position[1]),
+                self.pid_controllers["z"].update(target[2], self.position[2]),
+            ])
 
+            self.velocity += accel * self.dt
+            speed = np.linalg.norm(self.velocity)
+            if speed > self.max_velocity:
+                self.velocity = (self.velocity / speed) * self.max_velocity
+
+            # self.position += add_sensor_noise(self.velocity * self.dt)
             self.position += add_sensor_noise(self.velocity * self.dt)
+            self.trajectory.append((t, *self.position))
+            t += self.dt
 
-            self.history.append({
-                "time": step * self.dt,
-                "x": self.position[0],
-                "y": self.position[1],
-                "z": self.position[2],
-                "vx": self.velocity[0],
-                "vy": self.velocity[1],
-                "vz": self.velocity[2],
-            })
+        print("Simulation complete.")
 
-        return pd.DataFrame(self.history)
+    def save_to_csv(self, filename="simulation_output.csv"):
+        import csv
+        with open(filename, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["time", "x", "y", "z"])
+            writer.writerows(self.trajectory)
