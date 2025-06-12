@@ -19,9 +19,9 @@ z = df["z"].values
 # Set up figure
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
-ax.set_xlim(min(x), max(x))
-ax.set_ylim(min(y), max(y))
-ax.set_zlim(min(z), max(z))
+ax.set_xlim(min(x), max(max(x), 20))
+ax.set_ylim(min(y), max(max(y), 20))
+ax.set_zlim(min(z), max(max(z), 20))
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
 ax.set_zlabel("Z")
@@ -42,6 +42,7 @@ target_dot, = ax.plot([], [], [], "rx", label="Target Waypoint", markersize=10)
 time_text = ax.text2D(0.05, 0.95, "", transform=ax.transAxes)
 
 ax.legend()
+
 
 # Init function
 def init():
@@ -105,12 +106,8 @@ ani = animation.FuncAnimation(
     repeat=False
 )
 
-# plt.show()
-
-# # Save as GIF
-# ani.save("uav_simulation.gif", writer="pillow", fps=int(1 / dt_seconds))
-# print("Saved animation to uav_simulation.gif")
+plt.show()
 
 # Save as MP4 using ffmpeg
-ani.save("uav_simulation.mp4", writer="ffmpeg", fps=int(1 / dt_seconds))
-print("Saved animation to uav_simulation.mp4")
+# ani.save("uav_simulation.mp4", writer="ffmpeg", fps=int(1 / dt_seconds))
+# print("Saved animation to uav_simulation.mp4")

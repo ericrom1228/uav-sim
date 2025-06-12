@@ -15,6 +15,7 @@ class UAVSimulator:
         self.velocity = np.zeros(3)
         self.waypoints = [np.array(wp, dtype=float) for wp in config["waypoints"]]
         self.current_wp_idx = 0
+        self.noise = config["sensor_noise"]
 
         self.pid_controllers = {
             "x": PIDController(**config["pid"]["x"], dt=self.dt),
@@ -33,7 +34,7 @@ class UAVSimulator:
             if np.linalg.norm(error) < self.tolerance:
                 self.current_wp_idx += 1
                 if self.current_wp_idx >= len(self.waypoints):
-                    print("All waypoints reached.")
+                    print(f"All waypoints reached in {t} seconds.")
                     break
                 # Reset PID controllers for next waypoint
                 for pid in self.pid_controllers.values():
@@ -51,9 +52,9 @@ class UAVSimulator:
             if speed > self.max_velocity:
                 self.velocity = (self.velocity / speed) * self.max_velocity
 
-            # self.position += add_sensor_noise(self.velocity * self.dt)
+            self.position += add_sensor_noise(self.velocity * self.dt)
             self.position += self.velocity * self.dt
-            self.trajectory.append((t, *self.position))
+            self.trajectory.append((t, *self.position, *self.velocity, *error))
             t += self.dt
 
         print("Simulation complete.")
@@ -62,5 +63,5 @@ class UAVSimulator:
         import csv
         with open(filename, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(["time", "x", "y", "z"])
+            writer.writerow(["time", "x", "y", "z", "vx", "vy", "vz", "ex", "ey", "ez"])
             writer.writerows(self.trajectory)
