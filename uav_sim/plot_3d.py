@@ -19,9 +19,9 @@ z = df["z"].values
 # Set up figure
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
-ax.set_xlim(min(x), max(max(x), 20))
-ax.set_ylim(min(y), max(max(y), 20))
-ax.set_zlim(min(z), max(max(z), 20))
+ax.set_xlim(min(x)-2, max(x)+2)
+ax.set_ylim(min(y)-2, max(y)+2)
+ax.set_zlim(min(z)-2, max(z)+2)
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
 ax.set_zlabel("Z")
@@ -106,8 +106,10 @@ ani = animation.FuncAnimation(
     repeat=False
 )
 
-plt.show()
+# plt.show()
 
 # Save as MP4 using ffmpeg
-# ani.save("uav_simulation.mp4", writer="ffmpeg", fps=int(1 / dt_seconds))
-# print("Saved animation to uav_simulation.mp4")
+# Must install ffmpeg:
+#   - mac: brew install ffmpeg
+ani.save("uav_simulation.mp4", writer="ffmpeg", fps=int(1 / dt_seconds))
+print("Saved animation to uav_simulation.mp4")
