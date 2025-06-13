@@ -1,4 +1,4 @@
-# config.py
+"""Configuration file for uav_sim"""
 
 SIM_CONFIG = {
     "initial_position": [0.0, 0.0, 0.0],

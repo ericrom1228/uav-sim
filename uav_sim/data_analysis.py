@@ -54,9 +54,24 @@ def plot_error(df):
 def plot_trajectory(df):
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection="3d")
-    ax.plot(df["x"], df["y"], df["z"], label="UAV Trajectory", color="blue")
-    ax.scatter(df["x"].iloc[0], df["y"].iloc[0], df["z"].iloc[0], color="green", label="Start", s=50)
-    ax.scatter(df["x"].iloc[-1], df["y"].iloc[-1], df["z"].iloc[-1], color="red", label="End", s=50)
+    ax.plot(
+        df["x"],
+        df["y"], df["z"], label="UAV Trajectory", color="blue")
+    ax.scatter(
+        df["x"].iloc[0],
+        df["y"].iloc[0],
+        df["z"].iloc[0],
+        color="green",
+        label="Start", s=50
+    )
+    ax.scatter(
+        df["x"].iloc[-1],
+        df["y"].iloc[-1],
+        df["z"].iloc[-1],
+        color="red",
+        label="End",
+        s=50
+    )
     ax.set_title("3D UAV Trajectory")
     ax.set_xlabel("X (m)")
     ax.set_ylabel("Y (m)")

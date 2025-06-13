@@ -68,7 +68,7 @@ Some of the metrics for evaluating your system include:
 
 | Metric                     | Why it matters                        |
 |----------------------------|---------------------------------------|
-| **Completion time**        | S                                     |
+| **Completion time**        | Shorter generally better              |
 | **Total path length**      | Ideally close to minimal (no zig-zag) |
 | **Overshoot**              | Should be minimized                   |
 | **Settling time**          | Time taken to stabilize at a waypoint |

@@ -1,5 +1,6 @@
 # uav_simulator.py
 
+import csv
 import numpy as np
 from pid_controller import PIDController
 from sensor import add_sensor_noise
@@ -60,8 +61,7 @@ class UAVSimulator:
         print("Simulation complete.")
 
     def save_to_csv(self, filename="simulation_output.csv"):
-        import csv
-        with open(filename, "w", newline="") as csvfile:
+        with open(filename, "w", newline="", encoding="utf-8") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["time", "x", "y", "z", "vx", "vy", "vz", "ex", "ey", "ez"])
             writer.writerows(self.trajectory)

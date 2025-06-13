@@ -3,7 +3,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import animation
-from mpl_toolkits.mplot3d import Axes3D  # Needed for 3D projection
 from config import SIM_CONFIG
 import numpy as np
 
